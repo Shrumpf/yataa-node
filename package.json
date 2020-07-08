@@ -1,0 +1,24 @@
+{
+  "name": "yataa-node",
+  "version": "0.0.1",
+  "description": "",
+  "main": "api.js",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./api.js"
+  },
+  "author": "Shrumpf",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shrumpf/yataa-node.git"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0"
+  }
+}
