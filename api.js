@@ -6,10 +6,16 @@ const mysql = require('mysql2/promise');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+  }
+
 const pool = mysql.createPool({
-    host: '',
-    user: '',
-    database: '',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -65,7 +71,7 @@ io.on('connection', (socket) => {
     io.emit('customEvent', { customData: true });
 });
 
-http.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+http.listen(process.env.PORT || 3000, function () {
+    console.log(`Example app listening on port ${process.env.PORT || 3000}!`);
 });
 
