@@ -23,12 +23,14 @@ app.get('/', function (req, res) {
 });
 
 app.get('/todos/', async function (req, res) {
-    const result = await pool.query('SELECT * FROM todos')
+    const result = await pool.query(`SELECT t.Id, u.Username, t.Title, t.Content, t.Created, t.Updated, t.Done FROM todos as t
+    INNER JOIN users as u ON t.UserId = u.Id`)
     res.send(result[0]);
 });
 
 app.get('/todos/:id', async function (req, res) {
-    const result = await pool.query('SELECT * FROM todos WHERE Id = ?', [req.params.id])
+    const result = await pool.query(`SELECT t.Id, u.Username, t.Title, t.Content, t.Created, t.Updated, t.Done FROM todos as t
+    INNER JOIN users as u ON t.UserId = u.Id WHERE t.Id = ?`, [req.params.id])
     res.send(result[0][0]);
 })
 
@@ -41,6 +43,13 @@ app.post('/todos/', async function (req, res) {
 app.put('/todos/:id', async function (req, res) {
     await pool.query('UPDATE todos SET Title = ?, Content = ?', [req.body.Title, req.body.Content])
     res.sendStatus(200);
+});
+
+app.put('/todos/:id/done', async function (req, res) {
+    await pool.query('UPDATE todos SET Done = Done ^ 1 WHERE Id = ?', [req.params.id]);
+    const result = await pool.query('SELECT Done FROM todos WHERE Id = ?', [req.params.id]);
+    res.sendStatus(200);
+    io.emit('changedTodoState', {data: {id: req.params.id, done: result[0][0].Done}});
 });
 
 app.delete('/todos/:id', async function (req, res) {
