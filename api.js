@@ -7,6 +7,19 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+const { createLogger, transports ,format, winston} = require('winston');
+const logger = createLogger({
+  level: 'info',
+  format: format.combine(
+    format.json(),
+    format.timestamp()
+),
+  transports: [
+    // - Write all logs error (and below) to `somefile.log`.
+    new transports.File({ filename: 'somefile.log', level: 'error', handleExceptions: true })
+  ]
+});
+
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
   }
